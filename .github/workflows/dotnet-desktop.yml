@@ -83,4 +83,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: GameShuffler
-        path: bin/Release/net6.0-windows/publish/win-x64
+        path: $GITHUB_WORKSPACE/GameShuffler/bin/Release/net6.0-windows/publish/win-x64
