@@ -83,4 +83,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: GameShuffler
-        path: ${{ github.workspace }}\GameShuffler\bin\${{ matrix.configuration }}\net6.0-windows\publish\
+        path: ${{ github.workspace }}\GameShuffler\bin\${{ matrix.configuration }}\win-x64\publish\
