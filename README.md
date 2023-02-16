@@ -14,3 +14,7 @@ A simple tool to shuffle PC games. Inspired by [Brossentia and Authorblues' Bizh
   * Click Stop Shuffle to resume all games, and stop the shuffler
 
 <img width="403" alt="ShufflerImage" src="https://user-images.githubusercontent.com/125438356/218967334-0cd24cb3-2d0f-4191-9bad-2349586cf7e1.png">
+
+## Limitations
+* The shuffler isn't able to savestate and close your games, so you must be able to run all of them simultaneously. The pausing should mean that the background games are using minimal CPU, but they will still take memory.
+* The way the shuffler pauses the background games may cause issues for some games. It will likely cause a disconnect for any game that requires an active internet connection.
