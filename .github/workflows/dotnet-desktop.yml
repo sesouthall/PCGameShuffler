@@ -76,11 +76,11 @@ jobs:
 
     # Publish the solution
     - name: Build
-      run: dotnet publish -c ${{ matrix.configuration }}
+      run: dotnet publish -c ${{ matrix.configuration }} -p:PublishProfile=FolderProfile
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: GameShuffler
-        path: ${{ github.workspace }}\GameShuffler\bin\${{ matrix.configuration }}\net6.0-windows\win-x64\publish\
+        path: ${{ github.workspace }}\GameShuffler\bin\${{ matrix.configuration }}\net6.0-windows\publish\win-x64\
