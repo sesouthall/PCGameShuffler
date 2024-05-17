@@ -18,3 +18,5 @@ A simple tool to shuffle PC games. Inspired by [Brossentia and Authorblues' Bizh
 ## Limitations
 * The shuffler isn't able to savestate and close your games, so you must be able to run all of them simultaneously. The pausing should mean that the background games are using minimal CPU, but they will still take memory.
 * The way the shuffler pauses the background games may cause issues for some games. It will likely cause a disconnect for any game that requires an active internet connection.
+* Switching active games occasionally loses focus. Clicking on the window will restore it. Running in windowed mode and not switching focus to other applications helps, but may not fix the issue entirely.
+* Anti-cheat tools may prevent the shuffler from pausing games when they are not active.
