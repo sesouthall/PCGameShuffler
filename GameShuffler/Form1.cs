@@ -39,8 +39,10 @@ namespace GameShuffler
         public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
         int RemoveGameKeyId = 1;
-
         int RemoveGameKey = (int)Keys.PageDown;
+
+        int NextGameKeyId = 2;
+        int NextGameKey = (int)Keys.PageUp;
 
         Thread? shuffleThread = null;
         bool stopShuffle = false;
@@ -89,13 +91,21 @@ namespace GameShuffler
 
             if (!RegisterHotKey(this.Handle, RemoveGameKeyId, 0x0000, RemoveGameKey))
             {
-                MessageBox.Show("Failed to initialize shuffle start key");
+                MessageBox.Show("Failed to initialize remove game key");
+            }
+
+            if (!RegisterHotKey(this.Handle, NextGameKeyId, 0x0000, NextGameKey))
+            {
+                MessageBox.Show("Failed to initialize next game key");
             }
 
             foreach (var processString in runningProcessesSelectionList.CheckedItems)
             {
                 var process = Process.GetProcessById(int.Parse(((string)processString).Split("\t")[1]));
-                gamesToShuffle.Add(process);
+                if (process != null)
+                {
+                    gamesToShuffle.Add(process);
+                }
             }
 
             shuffleThread = new Thread(ShuffleLoop);
@@ -118,18 +128,31 @@ namespace GameShuffler
             }
 
             UnregisterHotKey(this.Handle, RemoveGameKeyId);
+            UnregisterHotKey(this.Handle, NextGameKeyId);
+
+            foreach (var process in gamesToShuffle)
+            {
+                if (process != currentGame)
+                {
+                    ResumeProcess(process);
+                    ShowWindow(process.MainWindowHandle, 3);
+                }
+                process.Dispose();
+            }
+            gamesToShuffle = new List<Process>();
+            currentGame = null;
         }
 
         private void ShuffleLoop()
         {
-            foreach (var process in gamesToShuffle) 
-            { 
+            foreach (var process in gamesToShuffle)
+            {
                 SuspendProcess(process);
             }
 
             while (gamesToShuffle.Any() && !stopShuffle)
             {
-                if (currentGame != null)
+                if (currentGame != null && gamesToShuffle.Count > 1)
                 {
                     ShowWindow(currentGame.MainWindowHandle, 0);
                     SuspendProcess(currentGame);
@@ -140,26 +163,32 @@ namespace GameShuffler
                 Thread.Sleep(rand.Next(minShuffleTime, maxShuffleTime)*1000);
             }
 
-            foreach (var process in gamesToShuffle)
-            {
-                if (process != currentGame)
-                {
-                    ResumeProcess(process);
-                }
-            }
-
             stopShuffle = false;
         }
 
         private void StartNewGame()
         {
-            var currentGameIndex = currentGame == null ? 0 : gamesToShuffle.IndexOf(currentGame);
-            var newGameIndex = currentGameIndex;
-            while (newGameIndex == currentGameIndex)
+            var newGame = currentGame;
+            while (newGame == currentGame)
             {
-                newGameIndex = rand.Next(gamesToShuffle.Count);
+                var newGameIndex = rand.Next(gamesToShuffle.Count);
+                newGame = gamesToShuffle[newGameIndex];
+                if (gamesToShuffle.Count <= 1)
+                {
+                    break;
+                }
+                if (newGame.HasExited)
+                {
+                    gamesToShuffle.RemoveAt(newGameIndex);
+                    newGame = currentGame;
+                }
             }
-            var newGame = gamesToShuffle[newGameIndex];
+
+            if (newGame == null)
+            {
+                return;
+            }
+
             ResumeProcess(newGame);
             ShowWindow(newGame.MainWindowHandle, 3);
             SetForegroundWindow(newGame.MainWindowHandle);
@@ -217,10 +246,16 @@ namespace GameShuffler
                 {
                     gamesToShuffle.Remove(currentGame);
                     currentGame.Kill();
+                    currentGame.Dispose();
                     if (gamesToShuffle.Any())
                     {
                         StartNewGame();
                     }
+                }
+
+                if (id == NextGameKeyId && gamesToShuffle.Any()) 
+                {
+                    StartNewGame();
                 }
             }
 
