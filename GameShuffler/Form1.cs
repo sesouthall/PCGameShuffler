@@ -154,7 +154,7 @@ namespace GameShuffler
             {
                 if (currentGame != null && gamesToShuffle.Count > 1)
                 {
-                    ShowWindow(currentGame.MainWindowHandle, 0);
+                    ShowWindow(currentGame.MainWindowHandle, 7);
                     SuspendProcess(currentGame);
                 }
 
