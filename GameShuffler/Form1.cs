@@ -115,7 +115,7 @@ namespace GameShuffler
         private void StopButton_Clicked(object sender, EventArgs e)
         {
             refreshButton.Enabled = true;
-            runningProcessesSelectionList.Items.Clear();
+            // runningProcessesSelectionList.Items.Clear();
             runningProcessesSelectionList.Enabled = true;
             startButton.Enabled = true;
             minTimeTextBox.Enabled = true;
@@ -255,6 +255,10 @@ namespace GameShuffler
 
                 if (id == NextGameKeyId && gamesToShuffle.Any()) 
                 {
+                    if (currentGame != null)
+                    {
+                        SuspendProcess(currentGame);
+                    }
                     StartNewGame();
                 }
             }
