@@ -49,6 +49,8 @@ namespace GameShuffler
             refreshButton = new Button();
             stopButton = new Button();
             label7 = new Label();
+            label8 = new Label();
+            switchingTimeTextBox = new TextBox();
             SuspendLayout();
             // 
             // runningProcessesSelectionList
@@ -124,7 +126,7 @@ namespace GameShuffler
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(465, 389);
+            label5.Location = new Point(456, 389);
             label5.Name = "label5";
             label5.Size = new Size(77, 25);
             label5.TabIndex = 8;
@@ -133,7 +135,7 @@ namespace GameShuffler
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(465, 426);
+            label6.Location = new Point(456, 426);
             label6.Name = "label6";
             label6.Size = new Size(77, 25);
             label6.TabIndex = 9;
@@ -169,11 +171,30 @@ namespace GameShuffler
             label7.TabIndex = 12;
             label7.Text = "Press PageUp to move to the next game";
             // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(539, 389);
+            label8.Name = "label8";
+            label8.Size = new Size(167, 25);
+            label8.TabIndex = 13;
+            label8.Text = "Switching time (ms)";
+            // 
+            // switchingTimeTextBox
+            // 
+            switchingTimeTextBox.Location = new Point(710, 389);
+            switchingTimeTextBox.Name = "switchingTimeTextBox";
+            switchingTimeTextBox.Size = new Size(50, 31);
+            switchingTimeTextBox.TabIndex = 14;
+            switchingTimeTextBox.Text = "100";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 593);
+            Controls.Add(switchingTimeTextBox);
+            Controls.Add(label8);
             Controls.Add(label7);
             Controls.Add(stopButton);
             Controls.Add(refreshButton);
@@ -208,5 +229,7 @@ namespace GameShuffler
         private Button refreshButton;
         private Button stopButton;
         private Label label7;
+        private Label label8;
+        private TextBox switchingTimeTextBox;
     }
 }

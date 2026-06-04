@@ -49,6 +49,7 @@ namespace GameShuffler
 
         int minShuffleTime = 0;
         int maxShuffleTime = 0;
+        int switchingTime = 0;
         List<Process> gamesToShuffle = new List<Process>();
 
         Process? currentGame = null;
@@ -82,21 +83,31 @@ namespace GameShuffler
             if (!int.TryParse(minTimeTextBox.Text, out minShuffleTime) || minShuffleTime < 0)
             {
                 MessageBox.Show("Minimum shuffle time must be a positive number");
+                return;
             }
 
             if (!int.TryParse(maxTimeTextBox.Text, out maxShuffleTime) || maxShuffleTime < minShuffleTime)
             {
                 MessageBox.Show("Maximum shuffle time must be a positive number greater than minimum shuffle time");
+                return;
+            }
+
+            if (!int.TryParse(switchingTimeTextBox.Text, out switchingTime) || switchingTime < 0)
+            {
+                MessageBox.Show("Switching time must be a positive number");
+                return;
             }
 
             if (!RegisterHotKey(this.Handle, RemoveGameKeyId, 0x0000, RemoveGameKey))
             {
                 MessageBox.Show("Failed to initialize remove game key");
+                return;
             }
 
             if (!RegisterHotKey(this.Handle, NextGameKeyId, 0x0000, NextGameKey))
             {
                 MessageBox.Show("Failed to initialize next game key");
+                return;
             }
 
             foreach (var processString in runningProcessesSelectionList.CheckedItems)
@@ -155,9 +166,11 @@ namespace GameShuffler
                 if (currentGame != null && gamesToShuffle.Count > 1)
                 {
                     ShowWindow(currentGame.MainWindowHandle, 7);
+                    Thread.Sleep(switchingTime/2);
                     SuspendProcess(currentGame);
                 }
 
+                Thread.Sleep(switchingTime/2);
                 StartNewGame();
 
                 Thread.Sleep(rand.Next(minShuffleTime, maxShuffleTime)*1000);
